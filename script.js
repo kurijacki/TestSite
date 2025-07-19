@@ -8,7 +8,6 @@ class MACUTApp {
         this.setupEventListeners();
         this.initializeComponents();
         this.setupScrollAnimations();
-        this.setupMobileNavigation();
         this.setupPortfolioScroll();
         this.setupContactForm();
         this.setupSmoothScroll();
@@ -52,84 +51,6 @@ class MACUTApp {
             clearTimeout(timeoutId);
             timeoutId = setTimeout(() => func.apply(this, args), delay);
         };
-    }
-
-    // ===== MOBILE NAVIGATION =====
-    setupMobileNavigation() {
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const mobileNav = document.querySelector('.mobile-nav');
-        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-        const body = document.body;
-
-        if (!mobileMenuBtn || !mobileNav) return;
-
-        // Toggle mobile menu
-        mobileMenuBtn.addEventListener('click', () => {
-            this.toggleMobileMenu();
-        });
-
-        // Close mobile menu when clicking links
-        mobileNavLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                this.closeMobileMenu();
-            });
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!mobileMenuBtn.contains(e.target) && !mobileNav.contains(e.target)) {
-                this.closeMobileMenu();
-            }
-        });
-
-        // Close mobile menu on escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeMobileMenu();
-            }
-        });
-    }
-
-    toggleMobileMenu() {
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const mobileNav = document.querySelector('.mobile-nav');
-        const body = document.body;
-
-        const isOpen = mobileNav.classList.contains('active');
-        
-        if (isOpen) {
-            this.closeMobileMenu();
-        } else {
-            this.openMobileMenu();
-        }
-    }
-
-    openMobileMenu() {
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const mobileNav = document.querySelector('.mobile-nav');
-        const body = document.body;
-
-        mobileMenuBtn.classList.add('active');
-        mobileNav.classList.add('active');
-        body.style.overflow = 'hidden';
-        
-        // Accessibility
-        mobileMenuBtn.setAttribute('aria-expanded', 'true');
-        mobileNav.setAttribute('aria-hidden', 'false');
-    }
-
-    closeMobileMenu() {
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const mobileNav = document.querySelector('.mobile-nav');
-        const body = document.body;
-
-        mobileMenuBtn.classList.remove('active');
-        mobileNav.classList.remove('active');
-        body.style.overflow = '';
-        
-        // Accessibility
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        mobileNav.setAttribute('aria-hidden', 'true');
     }
 
     // ===== SMOOTH SCROLL NAVIGATION =====
@@ -242,9 +163,6 @@ class MACUTApp {
     // ===== PORTFOLIO HORIZONTAL SCROLL =====
     setupPortfolioScroll() {
         const portfolioContainer = document.querySelector('.portfolio-scroll');
-        const prevBtn = document.querySelector('#portfolio-prev');
-        const nextBtn = document.querySelector('#portfolio-next');
-        
         if (!portfolioContainer) return;
 
         this.portfolioScroll = {
@@ -267,6 +185,7 @@ class MACUTApp {
     }
 
     calculatePortfolioMaxIndex() {
+        if (!this.portfolioScroll || !this.portfolioScroll.container) return;
         const container = this.portfolioScroll.container;
         const items = container.querySelectorAll('.portfolio-item');
         const containerWidth = container.parentElement.offsetWidth;
@@ -625,7 +544,6 @@ class MACUTApp {
     handleResize() {
         this.calculatePortfolioMaxIndex();
         this.updatePortfolioButtons();
-        this.closeMobileMenu();
     }
 
     handleWindowLoad() {
@@ -806,3 +724,39 @@ if (slider) {
   //slider.addEventListener('mouseleave', startAutoSlide);
   startAutoSlide();
 }
+
+// Novi hamburger meni JS (van klase MACUTApp)
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if (!hamburger || !mobileMenu) return;
+
+  function closeMobileMenu() {
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  hamburger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const isActive = hamburger.classList.toggle('active');
+    mobileMenu.classList.toggle('active');
+    document.body.style.overflow = isActive ? 'hidden' : '';
+  });
+
+  mobileMenu.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A') {
+      closeMobileMenu();
+    }
+  });
+  document.addEventListener('click', function(e) {
+    if (!mobileMenu.contains(e.target) && !hamburger.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeMobileMenu();
+    }
+  });
+});

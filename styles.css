@@ -48,24 +48,10 @@
   
   /* Transitions */
   --transition-fast: 0.2s ease;
-}
-
-/* Demo Notice Stilovi */
-.demo-notice {
-  background: rgba(220, 53, 69, 0.9);
-  color: white;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  text-align: center;
-  font-size: var(--font-size-sm);
-  line-height: 1.4;
-  border: 2px solid #dc3545;
-  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
-}
   --transition-medium: 0.3s ease;
   --transition-slow: 0.5s ease;
-  
+
+ 
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -82,6 +68,22 @@
   --z-overlay: 80;
   --z-modal: 1000;
 }
+
+/* Demo Notice Stilovi */
+.demo-notice {
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  border: 2px solid #dc3545;
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+
 
 /* ===== RESET I OSNOVE ===== */
 * {
@@ -205,83 +207,144 @@ a:hover {
   color: var(--secondary-color);
 }
 
-/* Mobile Menu Button */
-.mobile-menu-btn {
+/* Ukloni stare stilove za .mobile-menu-btn, .mobile-nav, .hamburger */
+/* Dodaj novi hamburger meni stil */
+.hamburger-new {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: var(--spacing-sm);
-  gap: 4px;
+  z-index: 11001;
 }
-
-.hamburger {
-  width: 25px;
-  height: 3px;
+.hamburger-new span {
+  display: block;
+  height: 4px;
+  width: 100%;
   background: var(--secondary-color);
-  transition: all var(--transition-fast);
+  margin: 5px 0;
   border-radius: 2px;
-
+  transition: 0.3s;
 }
-
-.mobile-menu-btn.active .hamburger:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
+.hamburger-new.active span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
 }
-
-.mobile-menu-btn.active .hamburger:nth-child(2) {
+.hamburger-new.active span:nth-child(2) {
   opacity: 0;
 }
-
-.mobile-menu-btn.active .hamburger:nth-child(3) {
-  transform: rotate(-45deg) translate(7px, -6px);
+.hamburger-new.active span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
 }
 
-/* Mobile Navigation */
+.mobile-menu-new {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(10,10,10,0.97);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.mobile-menu-new.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.mobile-menu-new ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  align-items: center;
+}
+.mobile-menu-new ul li a {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.mobile-menu-new ul li a:hover {
+  color: var(--secondary-color);
+}
+@media (min-width: 1024px) {
+  .hamburger-new { display: none; }
+  .mobile-menu-new { display: none !important; }
+}
+
+
+/* ===== MOBILE NAVIGATION DROPDOWN ===== */
+/* Glavni kontejner za mobilnu navigaciju - fiksiran preko celog ekrana */
 .mobile-nav {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.95);
-  max-height: fit-content;
-  z-index: var(--z-mobile-nav);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,1);
+  z-index: 9999;
   transform: translateX(-100%);
   transition: transform var(--transition-medium);
-  backdrop-filter: blur(10px);
-  padding-top: 80px;
+  backdrop-filter: none;
 }
 
+/* Kada je meni aktivan - prikazuje se */
 .mobile-nav.active {
   transform: translateX(0);
 }
 
+/* Lista linkova u mobilnom meniju */
 .mobile-nav-list {
   list-style: none;
+  /* UNUTRAŠNJI RAZMAK: padding oko cela lista */
   padding: var(--spacing-2xl);
   display: flex;
   flex-direction: column;
+  /* RAZMAK: gap kontroliše razmak između linkova 
+     Koristi --spacing-sm, --spacing-md, --spacing-lg, --spacing-xl, --spacing-2xl */
   gap: var(--spacing-xl);
+  /* POZICIONIRANJE: justify-content: flex-start drži linkove uvek na vrhu */
+  justify-content: flex-start;
+  /* VISINA: height: 100vh osigurava da lista zauzme celu visinu */
+  height: 100vh;
+  /* GORNJI RAZMAK: padding-top da linkovi počnu ispod header-a */
+  padding-top: 0;
 }
 
 .mobile-nav-item {
   margin-bottom: 0;
+  /* Ovde možeš dodati stilove za svaki item posebno */
 }
 
+/* Stilovi za linkove u mobilnom meniju */
 .mobile-nav-link {
+  /* VELIČINA FONTA: --font-size-sm/md/lg/xl/2xl ili direktno 18px, 20px */
   font-size: var(--font-size-2xl);
+  /* DEBLJINA FONTA: light/normal/medium/semibold/bold */
   font-weight: var(--font-weight-medium);
+  /* BOJA TEKSTA: Promeni var(--text-light) ili koristi #ffffff */
   color: var(--text-light);
   display: block;
+  /* PADDING: Unutrašnji razmak oko teksta - povećaj za veće dugmiće */
   padding: var(--spacing-md);
   text-align: center;
   transition: color var(--transition-fast);
 }
 
+/* Hover efekat kada pređeš mišem preko linka */
 .mobile-nav-link:hover {
+  /* HOVER BOJA: Boja kada pređeš mišem preko */
   color: var(--secondary-color);
 }
+
 
 /* ===== HERO SECTION ===== */
 .hero {
@@ -1467,8 +1530,6 @@ body.loaded {
   position: relative;
 }
 
-
-
 .pricing-circle {
   width: 36px;
   height: 36px;
@@ -1982,3 +2043,6 @@ body.loaded {
     padding: 24px 10px 18px 10px;
   }
 }===== */
+.contact-row, .contact-form-custom, .footer, .footer-content, .footer-bottom {
+  z-index: 0 !important;
+}
